@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
   public void showToast(String message) {
     setProgressVisibility(View.GONE);
     Toast toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
-    toast.setGravity(Gravity.BOTTOM, 0,
-        getResources().getDimensionPixelOffset(R.dimen.toast_vertical_margin));
+    toast.setMargin(-1, 0.1f);
     toast.show();
   }
 

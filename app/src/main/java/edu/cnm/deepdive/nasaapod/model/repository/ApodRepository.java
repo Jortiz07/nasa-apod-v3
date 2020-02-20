@@ -61,6 +61,7 @@ public class ApodRepository {
                           return apod;
                         })
                 )
+                .onErrorReturn((throwable) -> null)
                 .subscribe(observer)
         )
         .doAfterSuccess(this::insertAccess);
