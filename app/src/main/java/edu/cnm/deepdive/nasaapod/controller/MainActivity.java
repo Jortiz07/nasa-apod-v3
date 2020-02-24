@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
   private ProgressBar loading;
   private Calendar calendar;
   private BottomNavigationView navigator;
+  private NavOptions navOptions;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +60,7 @@ public class MainActivity extends AppCompatActivity {
     viewModel = new ViewModelProvider(this).get(MainViewModel.class);
     viewModel.getApod().observe(this, (apod) -> {
       calendar.setTime(apod.getDate());
-      if (navController.getCurrentDestination().getId() != R.id.navigation_image) {
-        navigator.setSelectedItemId(R.id.navigation_image);
-        navController.navigate(R.id.navigation_image);
-      }
+      navigateTo(R.id.navigation_image);
     });
     viewModel.getThrowable().observe(this, (throwable) -> {
       if (throwable != null) {
@@ -73,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setupNavigation() {
-    NavOptions options = new NavOptions.Builder()
+    navOptions = new NavOptions.Builder()
         .setPopUpTo(R.id.navigation_map, true)
         .build();
     AppBarConfiguration appBarConfiguration =
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
     navigator = findViewById(R.id.navigator);
     navigator.setOnNavigationItemSelectedListener((item) -> {
-      navController.navigate(item.getItemId(), null, options);
+      navigateTo(item.getItemId());
       return true;
     });
   }
@@ -100,4 +98,12 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  private void navigateTo(int itemId) {
+    if (navController.getCurrentDestination().getId() != itemId) {
+      navController.navigate(itemId, null, navOptions);
+      if (navigator.getSelectedItemId() != itemId) {
+        navigator.setSelectedItemId(itemId);
+      }
+    }
+  }
 }
